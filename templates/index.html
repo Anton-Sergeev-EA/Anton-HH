@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Хедер с логотипом и информацией пользователя -->
+    <header class="header">
+        <div class="logo-container">
+            <div class="notebook-icon">
+                <img src="{{ url_for('static', filename='images/notebook.png') }}" alt="Notebook Icon"
+                    class="notebook-img">
+            </div>
+            <div class="logo-text">
+                <h1>Anton-HH</h1>
+                <p>Умный контроль откликов на вакансии</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <span>👤 {{ username }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">🚪 Выйти</a>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <!-- Форма добавления отклика -->
+        <section class="application-form">
+            <h2>📝 Добавить отклик</h2>
+            <form id="applicationForm">
+                <div class="form-group">
+                    <label for="company">🏢 Название компании:</label>
+                    <input type="text" id="company" name="company" required placeholder="Например: Umbrella">
+                </div>
+                <div class="form-group">
+                    <label for="position">💼 Должность:</label>
+                    <input type="text" id="position" name="position" required placeholder="Например: Директор">
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>🚀 Добавить отклик</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Список откликов -->
+        <section class="applications-list">
+            <h2>📊 История откликов</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalApplications">0</span>
+                    <span class="stat-label">Всего откликов</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="uniqueCompanies">0</span>
+                    <span class="stat-label">Уникальных компаний</span>
+                </div>
+            </div>
+            <div id="applicationsContainer" class="applications-container">
+                <div class="empty-state">
+                    <p>📭 Пока нет откликов. Добавьте первый!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeDeleteModal">&times;</span>
+        <h3>🗑️ Подтверждение удаления</h3>
+        <p id="deleteModalMessage">Вы уверены, что хотите удалить этот отклик?</p>
+        <div class="modal-buttons">
+            <button id="confirmDelete" class="btn-danger">Да, удалить</button>
+            <button id="cancelDelete" class="btn-secondary">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для сообщений -->
+<div id="messageModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modalMessage"></p>
+    </div>
+</div>
+
+<style>
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+
+    .logout-btn {
+        padding: 8px 16px;
+        background: var(--error-red);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Стили для кнопки удаления */
+    .delete-btn {
+        background: var(--error-red);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .delete-btn:hover {
+        background: #dc2626;
+        transform: translateY(-1px);
+    }
+
+    .application-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    /* Стили для модального окна удаления */
+    .modal-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+    }
+
+    .btn-danger {
+        background: var(--error-red);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background: #dc2626;
+        transform: translateY(-1px);
+    }
+
+    #deleteModal .modal-content {
+        max-width: 400px;
+    }
+
+    #deleteModal h3 {
+        margin-bottom: 10px;
+        color: var(--text-dark);
+    }
+
+    #deleteModalMessage {
+        margin-bottom: 0;
+        color: var(--text-light);
+    }
+
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+        .application-actions {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .modal-buttons {
+            flex-direction: column;
+        }
+
+        .header {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .user-info {
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
